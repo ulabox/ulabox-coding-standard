@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ruleset name="Ulabox">
+    <description>Ulabox coding standard.</description>
+
+    <rule ref="../Symfony2/ruleset.xml"/>
+
+    <!-- Exclude rules for Ulabox -->
+    <rule ref="Symfony2.Commenting.FunctionComment.Missing">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Symfony2.Commenting.ClassComment.Missing">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Symfony2.NamingConventions.ValidClassName.Invalid">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Symfony2.Commenting.FunctionComment.MissingParamName">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Symfony2.Commenting.FunctionComment.MissingParamTag">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Symfony2.Functions.ScopeOrder.Invalid">
+        <severity>0</severity>
+    </rule>
+
+</ruleset>
