@@ -8,7 +8,7 @@ Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/mas
 
 1. Arrays
 
-        - Array bracket spacing fule from the Squiz standard.
+        - Array bracket spacing fule from the [Squiz](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Squiz) standard.
 
 2. Commenting:
 
@@ -30,7 +30,7 @@ Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/mas
         
 4. Control Structure:
 
-        - Inline control structure rule from the Generic standard.
+        - Inline control structure rule from the [Generic](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Generic) standard.
 
 5. Formatting:
 
