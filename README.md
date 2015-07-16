@@ -8,7 +8,7 @@ Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/mas
 
 1. Arrays
 
-        - Array bracket spacing fule from the Squiz standard.
+        - Ensure that there are no spaces around square brackets.
 
 2. Commenting:
 
@@ -16,25 +16,23 @@ Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/mas
 
         - Variables comments must have var tag with var type.
 
-        - Inline comment rule from the PEAR standard.
+        - Ensure that no perl-style comments are used.
 
 3. Control Structures:
 
-        - Control signature rule from the Squiz standard.
+        - Ensure that control statements conform to their coding standards.
         
-        - For each loop declaration rule from the Squiz standard.
+        - Ensure that there is a space between each condition of foreach loops.
         
-        - For lookp declaration rule from the Squiz standard.
+        - Ensure that there is a space between each condition of for loops.
         
-        - Lowercase declaration rule from the Squiz standard.
-        
-4. Control Structure:
+        - Ensure all control structure keywords are lowercase.
 
-        - Inline control structure rule from the sGeneric standard.
+        - Ensure that inline control statements are not present.
 
 5. Formatting:
 
-        - Space after cast rule from the Generic standard.
+        - Ensure there is a single space after cast tokens.
 
 6. Functions:
 
@@ -46,47 +44,43 @@ Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/mas
 
         - The use of Interface, Trait, Abstract, ... on class names are not allowed.
         
-        - Upper case constant name rule from the Generic standard.
+        - Ensure that constant names are all uppercase.
 
 8. PHP:
 
         - Lower case constant rule from the Generic standard.
 
-        - Lower case PHP functions rule from the Squiz standard.
+        - Ensure all calls to inbuilt PHP functions are lowercase.
 
 9. Scope:
 
-        - Member var scope from the Squiz standard.
+        - Ensure that class members have scope modifiers.
 
 10. Strings:
 
-        - Concatenation spacing rule from the Squiz standard.
+        - Ensure there are no spaces between the concatenation operator (.) and the strings being concatenated.
 
 ## Excluded Rules
 
 The following rules are excluded from the Zend and PEAR standards:
 
-1. Commenting:
-
-        - Spacing before tags rule from the PEAR standard.
-
 2. Control Structures:
 
-        - Control signature rule from the PEAR standard.
+        - Ensure that control statements conform to their coding standards.
 
 3. Debug:
 
-        - Code analyzer rule from the Zend standard.
+        - Code analyzer from the Zend standard.
 
 4. Functions:
 
-        - Content after open bracket rule from the PEAR standard.
-        - Close bracket line rule from the PEAR standard.
+        - Opening parenthesis of a multi-line function call must be the last content on the line.
+        - Closing parenthesis of a multi-line function call must be on a line by itself.
 
 5. Naming Conventions:
 
-        - Private no underscore rule from the Zend standard.
-        - Contains numbers rule from the Zend standard.
+        - Member variables must contain leading underscore.
+        - Member variables shouldn't contain numbers.
 
 ## Installation
 
