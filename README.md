@@ -2,7 +2,7 @@
 
 A coding standard to check against the Ulabox coding standards, originally copied from the escapestudios/Symfony2-coding-standard repository.
 
-The coding standard is different if its used on Behat or PhpSpec. Remember to add the correct path in each case when calling ´phpcs --standard="path/to/ruleset" file´. 
+The coding standard is different if its used on Behat or PhpSpec. Remember to add the correct path in each case when calling `phpcs --standard="path/to/ruleset" file`. 
 
 ## Rules
 
