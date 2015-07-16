@@ -4,7 +4,7 @@ A coding standard to check against the Ulabox coding standards, originally copie
 
 The coding standard is different if its used on Behat or PhpSpec. Remember to add the correct path in each case when calling `phpcs --standard="path/to/ruleset" file`. 
 
-## Rules
+##  Ulabox Rules
 
 Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PSR2), [Zend](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Zend) and [PEAR](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PEAR) standard plus the following rules:
 
@@ -62,7 +62,7 @@ Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/mas
 
   - Ensure there are no spaces between the concatenation operator (.) and the strings being concatenated.
 
-## Excluded Rules
+## Excluded Rules in Ulabox
 
 The following rules are excluded from the Zend and PEAR standards:
 
@@ -83,6 +83,31 @@ The following rules are excluded from the Zend and PEAR standards:
 
   - Member variables must contain leading underscore.
   - Member variables shouldn't contain numbers.
+
+## Excluded Rules in Ulabox-Behat
+
+The Ulabox-Behat standard inherits from the Ulabox standard. The rules excluded are:
+
+1. Comments:
+
+  - The whole set of comment rules from Ulabox standard.
+
+2. Classes:
+
+  - The whole set of classes rules from PRS1 standard.
+
+## Excluded Rules in Ulabox-PhpSpec
+
+The Ulabox-PhpSpec standard inherits from the Ulabox standard. The rules excluded are:
+
+1. Comments:
+
+  - The whole set of comment rules from Ulabox standard.
+  - The whole set of comment rules from PEAR standard.
+
+2. Scope:
+  
+  - The whole set of method scope rules from the Squiz standard.
 
 ## Installation
 
