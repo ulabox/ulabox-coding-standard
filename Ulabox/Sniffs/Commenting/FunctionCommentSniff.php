@@ -129,66 +129,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
             }
         }//end if
     }//end processReturn()
-    /**
-     * Process any throw tags that this function comment has.
-     *
-     * @param PHP_CodeSniffer_File $phpcsFile    The file being scanned.
-     * @param int                  $stackPtr     The position of the current token
-     *                                           in the stack passed in $tokens.
-     * @param int                  $commentStart The position in the stack where the comment started.
-     *
-     * @return void
-     */
-    protected function processThrows(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $commentStart)
-    {
-        $tokens = $phpcsFile->getTokens();
-        $throws = array();
-        foreach ($tokens[$commentStart]['comment_tags'] as $pos => $tag) {
-            if ($tokens[$tag]['content'] !== '@throws') {
-                continue;
-            }
-            $exception = null;
-            $comment   = null;
-            if ($tokens[($tag + 2)]['code'] === T_DOC_COMMENT_STRING) {
-                $matches = array();
-                preg_match('/([^\s]+)(?:\s+(.*))?/', $tokens[($tag + 2)]['content'], $matches);
-                $exception = $matches[1];
-                if (isset($matches[2]) === true && trim($matches[2]) !== '') {
-                    $comment = $matches[2];
-                }
-            }
-            if ($exception === null) {
-                $error = 'Exception type and comment missing for @throws tag in function comment';
-                $phpcsFile->addError($error, $tag, 'InvalidThrows');
-            } else if ($comment === null) {
-                $error = 'Comment missing for @throws tag in function comment';
-                $phpcsFile->addError($error, $tag, 'EmptyThrows');
-            } else {
-                // Any strings until the next tag belong to this comment.
-                if (isset($tokens[$commentStart]['comment_tags'][($pos + 1)]) === true) {
-                    $end = $tokens[$commentStart]['comment_tags'][($pos + 1)];
-                } else {
-                    $end = $tokens[$commentStart]['comment_closer'];
-                }
-                for ($i = ($tag + 3); $i < $end; $i++) {
-                    if ($tokens[$i]['code'] === T_DOC_COMMENT_STRING) {
-                        $comment .= ' '.$tokens[$i]['content'];
-                    }
-                }
-                // Starts with a capital letter and ends with a fullstop.
-                $firstChar = $comment{0};
-                if (strtoupper($firstChar) !== $firstChar) {
-                    $error = '@throws tag comment must start with a capital letter';
-                    $phpcsFile->addError($error, ($tag + 2), 'ThrowsNotCapital');
-                }
-                $lastChar = substr($comment, -1);
-                if ($lastChar !== '.') {
-                    $error = '@throws tag comment must end with a full stop';
-                    $phpcsFile->addError($error, ($tag + 2), 'ThrowsNoFullStop');
-                }
-            }//end if
-        }//end foreach
-    }//end processThrows()
+
     /**
      * Process the function parameter comments.
      *
@@ -454,16 +395,5 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                 $phpcsFile->addError($error, $param['tag'], 'ParamCommentFullStop');
             }
         }//end foreach
-        $realNames = array();
-        foreach ($realParams as $realParam) {
-            $realNames[] = $realParam['name'];
-        }
-        // Report missing comments.
-        $diff = array_diff($realNames, $foundParams);
-        foreach ($diff as $neededParam) {
-            $error = 'Doc comment for parameter "%s" missing';
-            $data  = array($neededParam);
-            $phpcsFile->addError($error, $commentStart, 'MissingParamTag', $data);
-        }
     }//end processParams()
 }//end class
