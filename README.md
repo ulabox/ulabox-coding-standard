@@ -62,6 +62,7 @@ Ulabox follows the PRS-2, Zend and PEAR standard plus the following rules:
 
         - Concatenation spacing rule from the Squiz standard.
 
+## Excluded Rules
 
 The following rules are excluded from the Zend and PEAR standards:
 
