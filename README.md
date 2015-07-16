@@ -4,11 +4,11 @@ A coding standard to check against the Ulabox coding standards, originally copie
 
 ## Rules
 
-Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PSR2), [Zend](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Zend) and [PEAR](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PEAR) standard plus the following rules:
+Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PSR2), [Zend](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Zend) and PEAR standard plus the following rules:
 
 1. Arrays
 
-        - Array bracket spacing fule from the [Squiz](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Squiz) standard.
+        - Array bracket spacing fule from the Squiz standard.
 
 2. Commenting:
 
@@ -30,7 +30,7 @@ Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/mas
         
 4. Control Structure:
 
-        - Inline control structure rule from the [Generic](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Generic) standard.
+        - Inline control structure rule from the sGeneric standard.
 
 5. Formatting:
 
