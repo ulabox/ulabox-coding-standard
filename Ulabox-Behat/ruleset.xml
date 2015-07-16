@@ -2,7 +2,7 @@
 <ruleset name="Ulabox-Behat">
     <description>Ulabox coding standard for Behat.</description>
 
-    <rule ref="../Ulabox-Generic/ruleset.xml"/>
+    <rule ref="../Ulabox/ruleset.xml"/>
 
     <rule ref="Ulabox.Commenting">
         <severity>0</severity>
