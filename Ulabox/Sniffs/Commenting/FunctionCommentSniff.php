@@ -10,6 +10,25 @@ if (class_exists('PEAR_Sniffs_Commenting_FunctionCommentSniff', true) === false)
  */
 class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting_FunctionCommentSniff
 {
+
+    /**
+     * An array of variable types for param/var we will check.
+     *
+     * @var array(string)
+     */
+    public static $allowedTypes = array(
+        'array',
+        'bool',
+        'float',
+        'int',
+        'mixed',
+        'object',
+        'string',
+        'resource',
+        'callable',
+    );
+
+
     /**
      * Process the return comment of this function comment.
      *
@@ -50,7 +69,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                 $typeNames      = explode('|', $content);
                 $suggestedNames = array();
                 foreach ($typeNames as $i => $typeName) {
-                    $suggestedName = PHP_CodeSniffer::suggestType($typeName);
+                    $suggestedName = $this->suggestType($typeName);
                     if (in_array($suggestedName, $suggestedNames) === false) {
                         $suggestedNames[] = $suggestedName;
                     }
@@ -229,7 +248,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
             // Check the param type value.
             $typeNames = explode('|', $param['type']);
             foreach ($typeNames as $typeName) {
-                $suggestedName = PHP_CodeSniffer::suggestType($typeName);
+                $suggestedName = $this->suggestType($typeName);
                 if ($typeName !== $suggestedName) {
                     $error = 'Expected "%s" but found "%s" for parameter type';
                     $data  = array(
@@ -254,7 +273,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                         $suggestedTypeHint = 'array';
                     } else if (strpos($suggestedName, 'callable') !== false) {
                         $suggestedTypeHint = 'callable';
-                    } else if (in_array($typeName, PHP_CodeSniffer::$allowedTypes) === false) {
+                    } else if (in_array($typeName, self::$allowedTypes) === false) {
                         $suggestedTypeHint = $suggestedName;
                     }
                     if ($suggestedTypeHint !== '' && isset($realParams[$pos]) === true) {
@@ -396,4 +415,74 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
             }
         }//end foreach
     }//end processParams()
+
+    /**
+     * Returns a valid variable type for param/var tag.
+     *
+     * If type is not one of the standard type, it must be a custom type.
+     * Returns the correct type name suggestion if type name is invalid.
+     *
+     * @param string $varType The variable type to process.
+     *
+     * @return string
+     */
+    private function suggestType($varType)
+    {
+        if ($varType === '') {
+            return '';
+        }
+
+        if (in_array($varType, self::$allowedTypes) === true) {
+            return $varType;
+        } else {
+            $lowerVarType = strtolower($varType);
+            switch ($lowerVarType) {
+                case 'boolean':
+                    return 'bool';
+                case 'double':
+                case 'real':
+                    return 'float';
+                case 'integer':
+                    return 'int';
+                case 'array()':
+                    return 'array';
+            }//end switch
+
+            if (strpos($lowerVarType, 'array(') !== false) {
+                // Valid array declaration:
+                // array, array(type), array(type1 => type2).
+                $matches = array();
+                $pattern = '/^array\(\s*([^\s^=^>]*)(\s*=>\s*(.*))?\s*\)/i';
+                if (preg_match($pattern, $varType, $matches) !== 0) {
+                    $type1 = '';
+                    if (isset($matches[1]) === true) {
+                        $type1 = $matches[1];
+                    }
+
+                    $type2 = '';
+                    if (isset($matches[3]) === true) {
+                        $type2 = $matches[3];
+                    }
+
+                    $type1 = $this->suggestType($type1);
+                    $type2 = $this->suggestType($type2);
+                    if ($type2 !== '') {
+                        $type2 = ' => '.$type2;
+                    }
+
+                    return "array($type1$type2)";
+                } else {
+                    return 'array';
+                }//end if
+            } else if (in_array($lowerVarType, self::$allowedTypes) === true) {
+                // A valid type, but not lower cased.
+                return $lowerVarType;
+            } else {
+                // Must be a custom type name.
+                return $varType;
+            }//end if
+        }//end if
+
+    }//end suggestType()
+
 }//end class

@@ -32,8 +32,6 @@
         <!-- covered by Squiz ControlSignature, which enforces try/catch as well -->
         <exclude name="PEAR.ControlStructures.ControlSignature"/>
 
-        <exclude name="PEAR.Commenting.FunctionComment.SpacingBeforeTags"/>
-
     </rule>
 
     <!-- Don't enforce Zend's private member underscores -->
@@ -51,6 +49,10 @@
         <severity>0</severity>
     </rule>
     <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine">
         <severity>0</severity>
     </rule>
 
