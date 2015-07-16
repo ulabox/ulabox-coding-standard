@@ -4,7 +4,7 @@ A coding standard to check against the Ulabox coding standards, originally copie
 
 ## Rules
 
-Ulabox follows the PRS-2, Zend and PEAR standard plus the following rules:
+Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PSR2), [Zend](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Zend) and [PEAR](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PEAR) standard plus the following rules:
 
 1. Arrays
 
@@ -87,9 +87,6 @@ The following rules are excluded from the Zend and PEAR standards:
 
         - Private no underscore rule from the Zend standard.
         - Contains numbers rule from the Zend standard.
-
-
-All rules can be checked [here](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards)
 
 ## Installation
 
