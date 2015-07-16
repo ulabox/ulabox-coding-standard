@@ -2,6 +2,8 @@
 
 A coding standard to check against the Ulabox coding standards, originally copied from the escapestudios/Symfony2-coding-standard repository.
 
+The coding standard is different if its used on Behat or PhpSpec. Remember to add the correct path in each case when calling ´phpcs --standard="path/to/ruleset" file´. 
+
 ## Rules
 
 Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PSR2), [Zend](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Zend) and [PEAR](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PEAR) standard plus the following rules:
