@@ -6,62 +6,87 @@ A coding standard to check against the Ulabox coding standards, originally copie
 
 Ulabox follows the PRS-2, Zend and PEAR standard plus the following rules:
 
-1. Arrays:
+1. Arrays
+
         - Array bracket spacing fule from the Squiz standard.
 
 2. Commenting:
+
         - Function comments must have param, throws and return tags if necessary.
+
         - Variables comments must have var tag with var type.
+
         - Inline comment rule from the PEAR standard.
 
 3. Control Structures:
+
         - Control signature rule from the Squiz standard.
+        
         - For each loop declaration rule from the Squiz standard.
+        
         - For lookp declaration rule from the Squiz standard.
+        
         - Lowercase declaration rule from the Squiz standard.
         
 4. Control Structure:
+
         - Inline control structure rule from the Generic standard.
 
 5. Formatting:
+
         - Space after cast rule from the Generic standard.
 
 6. Functions:
+
         - No setters and getters are allowed.
+        
         - Call time pass by reference rule from the Generic standard.
 
 7. Naming conventions:
+
         - The use of Interface, Trait, Abstract, ... on class names are not allowed.
+        
         - Upper case constant name rule from the Generic standard.
 
 8. PHP:
+
         - Lower case constant rule from the Generic standard.
+
         - Lower case PHP functions rule from the Squiz standard.
 
 9. Scope:
+
         - Member var scope from the Squiz standard.
 
 10. Strings:
+
         - Concatenation spacing rule from the Squiz standard.
+
 
 The following rules are excluded from the Zend and PEAR standards:
 
 1. Commenting:
+
         - Spacing before tags rule from the PEAR standard.
 
 2. Control Structures:
+
         - Control signature rule from the PEAR standard.
 
 3. Debug:
+
         - Code analyzer rule from the Zend standard.
 
 4. Functions:
+
         - Content after open bracket rule from the PEAR standard.
         - Close bracket line rule from the PEAR standard.
 
 5. Naming Conventions:
+
         - Private no underscore rule from the Zend standard.
         - Contains numbers rule from the Zend standard.
+
 
 All rules can be checked [here](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards)
 
