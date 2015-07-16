@@ -32,6 +32,8 @@
         <!-- covered by Squiz ControlSignature, which enforces try/catch as well -->
         <exclude name="PEAR.ControlStructures.ControlSignature"/>
 
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+
     </rule>
 
     <!-- Don't enforce Zend's private member underscores -->
