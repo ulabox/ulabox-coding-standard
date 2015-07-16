@@ -8,57 +8,57 @@ Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/mas
 
 1. Arrays
 
-        - Ensure that there are no spaces around square brackets.
+  - Ensure that there are no spaces around square brackets.
 
 2. Commenting:
 
-        - Function comments must have param, throws and return tags if necessary.
+  - Function comments must have param, throws and return tags if necessary.
 
-        - Variables comments must have var tag with var type.
+  - Variables comments must have var tag with var type.
 
-        - Ensure that no perl-style comments are used.
+  - Ensure that no perl-style comments are used.
 
 3. Control Structures:
 
-        - Ensure that control statements conform to their coding standards.
+  - Ensure that control statements conform to their coding standards.
         
-        - Ensure that there is a space between each condition of foreach loops.
+  - Ensure that there is a space between each condition of foreach loops.
         
-        - Ensure that there is a space between each condition of for loops.
+  - Ensure that there is a space between each condition of for loops.
         
-        - Ensure all control structure keywords are lowercase.
+  - Ensure all control structure keywords are lowercase.
 
-        - Ensure that inline control statements are not present.
+  - Ensure that inline control statements are not present.
 
 5. Formatting:
 
-        - Ensure there is a single space after cast tokens.
+  - Ensure there is a single space after cast tokens.
 
 6. Functions:
 
-        - No setters and getters are allowed.
+  - No setters and getters are allowed.
         
-        - Call time pass by reference rule from the Generic standard.
+  - Ensure that variables are not passed by reference when calling a function.
 
 7. Naming conventions:
 
-        - The use of Interface, Trait, Abstract, ... on class names are not allowed.
+  - The use of Interface, Trait, Abstract, ... on class names are not allowed.
         
-        - Ensure that constant names are all uppercase.
+  - Ensure that constant names are all uppercase.
 
 8. PHP:
 
-        - Lower case constant rule from the Generic standard.
+  - Lower case constant rule from the Generic standard.
 
-        - Ensure all calls to inbuilt PHP functions are lowercase.
+  - Ensure all calls to inbuilt PHP functions are lowercase.
 
 9. Scope:
 
-        - Ensure that class members have scope modifiers.
+  - Ensure that class members have scope modifiers.
 
 10. Strings:
 
-        - Ensure there are no spaces between the concatenation operator (.) and the strings being concatenated.
+  - Ensure there are no spaces between the concatenation operator (.) and the strings being concatenated.
 
 ## Excluded Rules
 
@@ -66,21 +66,21 @@ The following rules are excluded from the Zend and PEAR standards:
 
 2. Control Structures:
 
-        - Ensure that control statements conform to their coding standards.
+  - Ensure that control statements conform to their coding standards.
 
 3. Debug:
 
-        - Code analyzer from the Zend standard.
+  - Code analyzer from the Zend standard.
 
 4. Functions:
 
-        - Opening parenthesis of a multi-line function call must be the last content on the line.
-        - Closing parenthesis of a multi-line function call must be on a line by itself.
+  - Opening parenthesis of a multi-line function call must be the last content on the line.
+  - Closing parenthesis of a multi-line function call must be on a line by itself.
 
 5. Naming Conventions:
 
-        - Member variables must contain leading underscore.
-        - Member variables shouldn't contain numbers.
+  - Member variables must contain leading underscore.
+  - Member variables shouldn't contain numbers.
 
 ## Installation
 
