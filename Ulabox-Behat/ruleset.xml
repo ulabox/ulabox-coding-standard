@@ -8,4 +8,8 @@
         <severity>0</severity>
     </rule>
 
+    <rule ref="PSR1">
+        <exclude name="PSR1.Classes"/>
+    </rule>
+
 </ruleset>
