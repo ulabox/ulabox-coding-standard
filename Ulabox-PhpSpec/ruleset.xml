@@ -16,4 +16,8 @@
         <exclude name="PEAR.Commenting"/>
     </rule>
 
+    <rule ref="PSR1.Methods">
+        <exclude name="PSR1.Methods"/>
+    </rule>
+
 </ruleset>
