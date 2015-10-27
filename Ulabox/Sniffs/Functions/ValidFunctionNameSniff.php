@@ -53,6 +53,7 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
             '__construct',
             'setUp',
             'tearDown',
+            'getMatches' //phpspec uses this to define custom matches
         );
 
         while ($function) {
@@ -66,7 +67,7 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
 
                     if (substr($tokens[$name]['content'], 0, 3) == 'set' && ctype_upper(substr($tokens[$name]['content'], 3, 1))) {
                         $phpcsFile->addError(
-                            sprintf('Setter "%s" starts with "get". Write a name that express a domain behavior', $tokens[$name]['content']),
+                            sprintf('Setter "%s" starts with "set". Write a name that express a domain behavior', $tokens[$name]['content']),
                             $stackPtr,
                             'Invalid'
                         );
