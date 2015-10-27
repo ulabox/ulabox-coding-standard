@@ -4,6 +4,30 @@ A coding standard to check against the Ulabox coding standards, originally copie
 
 The coding standard is different if its used on Behat or PhpSpec. Remember to add the correct path in each case when calling `phpcs --standard="path/to/ruleset" file`. 
 
+### build.xml example
+    <target name="phpcs" description="Runs Ulabox PHPCS">
+        <exec dir="${basedir}" executable="bin/phpcs" failonerror="true">
+            <arg value="--report-full" />
+            <arg value="--report-checkstyle=build/phpcs.xml" />
+            <arg value="--standard=vendor/ulabox/ulabox-coding-standard/Ulabox/ruleset.xml" />
+            <arg value="--ignore=cache,logs,js,Doctrine,app" />
+            <arg value="${sourcedir}" />
+        </exec>
+        <exec dir="${basedir}" executable="bin/phpcs" failonerror="true">
+            <arg value="--report-full" />
+            <arg value="--report-checkstyle=build/phpcs.xml" />
+            <arg value="--standard=vendor/ulabox/ulabox-coding-standard/Ulabox-Behat/ruleset.xml" />
+            <arg value="${basedir}/tests/Functional/Context" />
+        </exec>
+
+        <exec dir="${basedir}" executable="bin/phpcs" failonerror="true">
+            <arg value="--report-full" />
+            <arg value="--report-checkstyle=build/phpcs.xml" />
+            <arg value="--standard=vendor/ulabox/ulabox-coding-standard/Ulabox-PhpSpec/ruleset.xml" />
+            <arg value="${basedir}/tests/Unit" />
+        </exec>
+    </target>
+
 ##  Ulabox Rules
 
 Ulabox follows the [PRS-2](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PSR2), [Zend](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/Zend) and [PEAR](https://github.com/squizlabs/PHP_CodeSniffer/tree/master/CodeSniffer/Standards/PEAR) standard plus the following rules:
