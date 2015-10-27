@@ -53,7 +53,7 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
             '__construct',
             'setUp',
             'tearDown',
-            'getMatches' //phpspec uses this to define custom matches
+            'getMatchers' //phpspec uses this to define custom matches
         );
 
         while ($function) {
