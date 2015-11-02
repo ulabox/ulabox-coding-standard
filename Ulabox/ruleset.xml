@@ -58,4 +58,10 @@
         <severity>0</severity>
     </rule>
 
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array" value="sizeof=>count,delete=>unset,eval=>null,system=>null,phpinfo=>null,die=>null,var_dump=>null,print_r=>null,extract=>null"/>
+        </properties>
+    </rule>
+
 </ruleset>
