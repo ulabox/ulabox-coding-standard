@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Validates that we don't use setters and getters (e.g. setCode, getName) in our classes
+ * Validates that we don't use public setters and getters (e.g. setCode, getName) in our classes
  */
 
 class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_Sniff
@@ -24,10 +24,9 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
     public function register()
     {
         return array(
-            T_CLASS,
-            T_INTERFACE,
+            T_FUNCTION
         );
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -40,47 +39,36 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
-        $function = $stackPtr;
-
-        $scopes = array(
-            0 => T_PUBLIC,
-            1 => T_PROTECTED,
-            2 => T_PRIVATE,
-        );
-
-        $whitelisted = array(
+        $whitelistedNames = [
             '__construct',
             'setUp',
             'tearDown',
-            'getMatchers' //phpspec uses this to define custom matches
-        );
+            'getMatchers'
+        ];
 
-        while ($function) {
-            $function = $phpcsFile->findNext(T_FUNCTION, $function + 1, $tokens[$stackPtr]['scope_closer']);
+        $tokens = $phpcsFile->getTokens();
+        $methodProperties = $phpcsFile->getMethodProperties($stackPtr);
+        if ($methodProperties['scope'] == 'public') {
+            $namePtr = $phpcsFile->findNext(T_STRING, $stackPtr + 1, $tokens[$stackPtr]['parenthesis_opener']);
+            $name = $tokens[$namePtr]['content'];
+            if (in_array($name, $whitelistedNames)) {
+                return;
+            }
 
-            if (isset($tokens[$function]['parenthesis_opener'])) {
-                $scope = $phpcsFile->findPrevious(T_PUBLIC, $function -1, $stackPtr);
-                $name = $phpcsFile->findNext(T_STRING, $function + 1, $tokens[$function]['parenthesis_opener']);
+            if (substr($name, 0, 3) == 'set' && ctype_upper(substr($name, 3, 1))) {
+                $phpcsFile->addError(
+                    sprintf('Public setter "%s" starts with "set". Write a name that express a domain behavior', $name),
+                    $stackPtr,
+                    'Invalid'
+                );
+            }
 
-                if ($scope && $name && !in_array($tokens[$name]['content'], $whitelisted)) {
-
-                    if (substr($tokens[$name]['content'], 0, 3) == 'set' && ctype_upper(substr($tokens[$name]['content'], 3, 1))) {
-                        $phpcsFile->addError(
-                            sprintf('Setter "%s" starts with "set". Write a name that express a domain behavior', $tokens[$name]['content']),
-                            $stackPtr,
-                            'Invalid'
-                        );
-                    }
-
-                    if (substr($tokens[$name]['content'], 0, 3) == 'get' && ctype_upper(substr($tokens[$name]['content'], 3, 1))) {
-                        $phpcsFile->addError(
-                            sprintf('Getter "%s" starts with "get". Write a name that express a domain behavior', $tokens[$name]['content']),
-                            $stackPtr,
-                            'Invalid'
-                        );
-                    }
-                }
+            if (substr($name, 0, 3) == 'get' && ctype_upper(substr($name, 3, 1))) {
+                $phpcsFile->addError(
+                    sprintf('Public getter "%s" starts with "get". Write a name that express a domain behavior', $name),
+                    $stackPtr,
+                    'Invalid'
+                );
             }
         }
     }
