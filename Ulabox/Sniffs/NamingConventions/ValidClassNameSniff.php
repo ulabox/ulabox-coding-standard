@@ -133,32 +133,6 @@ class Ulabox_Sniffs_NamingConventions_ValidClassNameSniff implements PHP_CodeSni
                         'Invalid'
                     );
                 }
-
-                /*
-                 * Suffix classes with Command;
-                 */
-                $name = $phpcsFile->findNext(T_STRING, $stackPtr);
-
-                if ($name && substr($tokens[$name]['content'], -7) == 'Command') {
-                    $phpcsFile->addError(
-                        sprintf('Class name "%s" is suffixed with "Command"', $tokens[$name]['content']),
-                        $stackPtr,
-                        'Invalid'
-                    );
-                }
-
-                /*
-                 * Suffix classes with Handler;
-                 */
-                $name = $phpcsFile->findNext(T_STRING, $stackPtr);
-
-                if ($name && substr($tokens[$name]['content'], -7) == 'Handler') {
-                    $phpcsFile->addError(
-                        sprintf('Class name "%s" is suffixed with "Handler"', $tokens[$name]['content']),
-                        $stackPtr,
-                        'Invalid'
-                    );
-                }
             }
             $stackPtr++;
         }
