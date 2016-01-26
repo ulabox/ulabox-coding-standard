@@ -43,7 +43,8 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
             '__construct',
             'setUp',
             'tearDown',
-            'getMatchers'
+            'getMatchers',
+            'getIterator',
         ];
 
         $tokens = $phpcsFile->getTokens();
