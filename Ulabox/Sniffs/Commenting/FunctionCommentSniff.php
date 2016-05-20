@@ -296,7 +296,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                         }
                     } else if ($suggestedTypeHint === '' && isset($realParams[$pos]) === true) {
                         $typeHint = $realParams[$pos]['type_hint'];
-                        if ($typeHint !== '') {
+                        if ($typeHint !== ''  && in_array($typeHint, self::$allowedTypes) === false) {
                             $error = 'Unknown type hint "%s" found for %s';
                             $data  = array(
                                 $typeHint,
