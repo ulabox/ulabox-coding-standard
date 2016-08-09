@@ -7,6 +7,12 @@
     <rule ref="Ulabox.Commenting">
         <severity>0</severity>
     </rule>
+    
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="0"/>
+        </properties>
+    </rule>
 
     <rule ref="PSR1">
         <exclude name="PSR1.Classes"/>
