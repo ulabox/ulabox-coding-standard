@@ -115,6 +115,7 @@ The Ulabox-Behat standard inherits from the Ulabox standard. The rules excluded 
 1. Comments:
 
   - The whole set of comment rules from Ulabox standard.
+  - The 120 characters limit has been removed to allow long annotations in Behat Context files
 
 2. Classes:
 
