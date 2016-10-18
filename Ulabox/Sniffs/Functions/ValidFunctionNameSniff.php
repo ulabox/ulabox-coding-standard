@@ -57,7 +57,7 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
             }
 
             if (substr($name, 0, 3) == 'set' && ctype_upper(substr($name, 3, 1))) {
-                $phpcsFile->addError(
+                $phpcsFile->addWarning(
                     sprintf('Public setter "%s" starts with "set". Write a name that express a domain behavior', $name),
                     $stackPtr,
                     'Invalid'
@@ -65,7 +65,7 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
             }
 
             if (substr($name, 0, 3) == 'get' && ctype_upper(substr($name, 3, 1))) {
-                $phpcsFile->addError(
+                $phpcsFile->addWarning(
                     sprintf('Public getter "%s" starts with "get". Write a name that express a domain behavior', $name),
                     $stackPtr,
                     'Invalid'
