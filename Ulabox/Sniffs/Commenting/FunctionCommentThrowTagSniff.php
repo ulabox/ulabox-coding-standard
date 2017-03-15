@@ -8,6 +8,7 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false
     $error = 'Class PHP_CodeSniffer_Standards_AbstractScopeSniff not found';
     throw new PHP_CodeSniffer_Exception($error);
 }
+
 /**
  * Verifies that a @throws tag exists for a function that throws exceptions.
  * Verifies the number of @throws tags and the number of throw tokens matches.
@@ -20,8 +21,9 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
      */
     public function __construct()
     {
-        parent::__construct(array(T_FUNCTION), array(T_THROW));
+        parent::__construct([T_FUNCTION], [T_THROW]);
     }//end __construct()
+
     /**
      * Processes the function tokens within the class.
      *
@@ -40,13 +42,13 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
             return;
         }
         $tokens = $phpcsFile->getTokens();
-        $find = array(
+        $find = [
             T_COMMENT,
             T_DOC_COMMENT_CLOSE_TAG,
             T_CLASS,
             T_FUNCTION,
             T_OPEN_TAG,
-        );
+        ];
         $commentEnd = $phpcsFile->findPrevious($find, ($currScope - 1));
         if ($commentEnd === false) {
             return;
@@ -61,8 +63,8 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
             $currScopeEnd = $tokens[$currScope]['scope_closer'];
         }
         // Find all the exception type token within the current scope.
-        $throwTokens = array();
-        $currPos     = $stackPtr;
+        $throwTokens = [];
+        $currPos = $stackPtr;
         if ($currScopeEnd !== 0) {
             while ($currPos < $currScopeEnd && $currPos !== false) {
                 /*
@@ -74,10 +76,10 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
                 $nextToken = $phpcsFile->findNext(T_WHITESPACE, ($currPos + 1), null, true);
                 if ($tokens[$nextToken]['code'] === T_NEW) {
                     $currException = $phpcsFile->findNext(
-                        array(
+                        [
                             T_NS_SEPARATOR,
                             T_STRING,
-                        ),
+                        ],
                         $currPos,
                         $currScopeEnd,
                         false,
@@ -86,10 +88,10 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
                     );
                     if ($currException !== false) {
                         $endException = $phpcsFile->findNext(
-                            array(
+                            [
                                 T_NS_SEPARATOR,
                                 T_STRING,
-                            ),
+                            ],
                             ($currException + 1),
                             $currScopeEnd,
                             true,
@@ -99,7 +101,10 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
                         if ($endException === false) {
                             $throwTokens[] = $tokens[$currException]['content'];
                         } else {
-                            $throwTokens[] = $phpcsFile->getTokensAsString($currException, ($endException - $currException));
+                            $throwTokens[] = $phpcsFile->getTokensAsString(
+                                $currException,
+                                ($endException - $currException)
+                            );
                         }
                     }//end if
                 }//end if
@@ -108,7 +113,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
         }//end if
         // Only need one @throws tag for each type of exception thrown.
         $throwTokens = array_unique($throwTokens);
-        $throwTags    = array();
+        $throwTags = [];
         $commentStart = $tokens[$commentEnd]['comment_opener'];
         foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
             if ($tokens[$tag]['content'] !== '@throws') {
@@ -116,7 +121,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
             }
             if ($tokens[($tag + 2)]['code'] === T_DOC_COMMENT_STRING) {
                 $exception = $tokens[($tag + 2)]['content'];
-                $space     = strpos($exception, ' ');
+                $space = strpos($exception, ' ');
                 if ($space !== false) {
                     $exception = substr($exception, 0, $space);
                 }
@@ -126,6 +131,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
         if (empty($throwTags) === true) {
             $error = 'Missing @throws tag in function comment';
             $phpcsFile->addError($error, $commentEnd, 'Missing');
+
             return;
         } else if (empty($throwTokens) === true) {
             // If token count is zero, it means that only variables are being
@@ -135,20 +141,21 @@ class Ulabox_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSnif
         }
         // Make sure @throws tag count matches throw token count.
         $tokenCount = count($throwTokens);
-        $tagCount   = count($throwTags);
+        $tagCount = count($throwTags);
         if ($tokenCount !== $tagCount) {
             $error = 'Expected %s @throws tag(s) in function comment; %s found';
-            $data  = array(
+            $data = [
                 $tokenCount,
                 $tagCount,
-            );
+            ];
             $phpcsFile->addError($error, $commentEnd, 'WrongNumber', $data);
+
             return;
         }
         foreach ($throwTokens as $throw) {
             if (isset($throwTags[$throw]) === false) {
                 $error = 'Missing @throws tag for "%s" exception';
-                $data  = array($throw);
+                $data = [$throw];
                 $phpcsFile->addError($error, $commentEnd, 'Missing', $data);
             }
         }

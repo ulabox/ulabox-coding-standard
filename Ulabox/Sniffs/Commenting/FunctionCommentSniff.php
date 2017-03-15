@@ -5,18 +5,18 @@
 if (class_exists('PEAR_Sniffs_Commenting_FunctionCommentSniff', true) === false) {
     throw new PHP_CodeSniffer_Exception('Class PEAR_Sniffs_Commenting_FunctionCommentSniff not found');
 }
+
 /**
  * Parses and verifies the doc comments for functions.
  */
 class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting_FunctionCommentSniff
 {
-
     /**
      * An array of variable types for param/var we will check.
      *
      * @var array(string)
      */
-    public static $allowedTypes = array(
+    public static $allowedTypes = [
         'array',
         'bool',
         'float',
@@ -26,8 +26,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
         'string',
         'resource',
         'callable',
-    );
-
+    ];
 
     /**
      * Process the return comment of this function comment.
@@ -43,7 +42,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
     {
         $tokens = $phpcsFile->getTokens();
         // Skip constructor and destructor.
-        $methodName      = $phpcsFile->getDeclarationName($stackPtr);
+        $methodName = $phpcsFile->getDeclarationName($stackPtr);
         $isSpecialMethod = ($methodName === '__construct' || $methodName === '__destruct');
         $return = null;
         foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
@@ -51,6 +50,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                 if ($return !== null) {
                     $error = 'Only 1 @return tag is allowed in a function comment';
                     $phpcsFile->addError($error, $tag, 'DuplicateReturn');
+
                     return;
                 }
                 $return = $tag;
@@ -66,8 +66,8 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                 $phpcsFile->addError($error, $return, 'MissingReturnType');
             } else {
                 // Check return type (can be multiple, separated by '|').
-                $typeNames      = explode('|', $content);
-                $suggestedNames = array();
+                $typeNames = explode('|', $content);
+                $suggestedNames = [];
                 foreach ($typeNames as $i => $typeName) {
                     $suggestedName = $this->suggestType($typeName);
                     if (in_array($suggestedName, $suggestedNames) === false) {
@@ -77,11 +77,11 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                 $suggestedType = implode('|', $suggestedNames);
                 if ($content !== $suggestedType) {
                     $error = 'Expected "%s" but found "%s" for function return type';
-                    $data  = array(
+                    $data = [
                         $suggestedType,
                         $content,
-                    );
-                    $fix   = $phpcsFile->addFixableError($error, $return, 'InvalidReturn', $data);
+                    ];
+                    $fix = $phpcsFile->addFixableError($error, $return, 'InvalidReturn', $data);
                     if ($fix === true) {
                         $phpcsFile->fixer->replaceToken(($return + 2), $suggestedType);
                     }
@@ -111,13 +111,13 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                                 $phpcsFile->addError($error, $return, 'InvalidReturnVoid');
                             }
                         }
-                    }//end if
+                    }
                 } else if ($content !== 'mixed') {
                     // If return type is not void, there needs to be a return statement
                     // somewhere in the function that returns something.
                     if (isset($tokens[$stackPtr]['scope_closer']) === true) {
-                        $endToken    = $tokens[$stackPtr]['scope_closer'];
-                        $returnToken = $phpcsFile->findNext(array(T_RETURN, T_YIELD), $stackPtr, $endToken);
+                        $endToken = $tokens[$stackPtr]['scope_closer'];
+                        $returnToken = $phpcsFile->findNext([T_RETURN, T_YIELD], $stackPtr, $endToken);
                         if ($returnToken === false) {
                             $error = 'Function return type is not void, but function has no return statement';
                             $phpcsFile->addError($error, $return, 'InvalidNoReturn');
@@ -129,12 +129,12 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                             }
                         }
                     }
-                }//end if
-            }//end if
+                }
+            }
         } else {
             if (isset($tokens[$stackPtr]['scope_closer']) === true) {
-                $endToken    = $tokens[$stackPtr]['scope_closer'];
-                $returnToken = $phpcsFile->findNext(array(T_RETURN, T_YIELD), $stackPtr, $endToken);
+                $endToken = $tokens[$stackPtr]['scope_closer'];
+                $returnToken = $phpcsFile->findNext([T_RETURN, T_YIELD], $stackPtr, $endToken);
                 if ($returnToken === false) {
                     $semicolon = $phpcsFile->findNext(T_WHITESPACE, ($returnToken + 1), null, true);
                     if ($tokens[$semicolon]['code'] === T_SEMICOLON) {
@@ -146,8 +146,8 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                     $phpcsFile->addError($error, $tokens[$commentStart]['comment_closer'], 'MissingReturn');
                 }
             }
-        }//end if
-    }//end processReturn()
+        }
+    }
 
     /**
      * Process the function parameter comments.
@@ -162,43 +162,43 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
     protected function processParams(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $commentStart)
     {
         $tokens = $phpcsFile->getTokens();
-        $params  = array();
+        $params = [];
         $maxType = 0;
-        $maxVar  = 0;
+        $maxVar = 0;
         foreach ($tokens[$commentStart]['comment_tags'] as $pos => $tag) {
             if ($tokens[$tag]['content'] !== '@param') {
                 continue;
             }
-            $type         = '';
-            $typeSpace    = 0;
-            $var          = '';
-            $varSpace     = 0;
-            $comment      = '';
-            $commentLines = array();
+            $type = '';
+            $typeSpace = 0;
+            $var = '';
+            $varSpace = 0;
+            $comment = '';
+            $commentLines = [];
             if ($tokens[($tag + 2)]['code'] === T_DOC_COMMENT_STRING) {
-                $matches = array();
+                $matches = [];
                 preg_match('/([^$&]+)(?:((?:\$|&)[^\s]+)(?:(\s+)(.*))?)?/', $tokens[($tag + 2)]['content'], $matches);
-                $typeLen   = strlen($matches[1]);
-                $type      = trim($matches[1]);
+                $typeLen = strlen($matches[1]);
+                $type = trim($matches[1]);
                 $typeSpace = ($typeLen - strlen($type));
-                $typeLen   = strlen($type);
+                $typeLen = strlen($type);
                 if ($typeLen > $maxType) {
                     $maxType = $typeLen;
                 }
                 if (isset($matches[2]) === true) {
-                    $var    = $matches[2];
+                    $var = $matches[2];
                     $varLen = strlen($var);
                     if ($varLen > $maxVar) {
                         $maxVar = $varLen;
                     }
                     if (isset($matches[4]) === true) {
-                        $varSpace       = strlen($matches[3]);
-                        $comment        = $matches[4];
-                        $commentLines[] = array(
+                        $varSpace = strlen($matches[3]);
+                        $comment = $matches[4];
+                        $commentLines[] = [
                             'comment' => $comment,
-                            'token'   => ($tag + 2),
-                            'indent'  => $varSpace,
-                        );
+                            'token' => ($tag + 2),
+                            'indent' => $varSpace,
+                        ];
                         // Any strings until the next tag belong to this comment.
                         if (isset($tokens[$commentStart]['comment_tags'][($pos + 1)]) === true) {
                             $end = $tokens[$commentStart]['comment_tags'][($pos + 1)];
@@ -211,35 +211,35 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                                 if ($tokens[($i - 1)]['code'] === T_DOC_COMMENT_WHITESPACE) {
                                     $indent = strlen($tokens[($i - 1)]['content']);
                                 }
-                                $comment       .= ' '.$tokens[$i]['content'];
-                                $commentLines[] = array(
+                                $comment .= ' '.$tokens[$i]['content'];
+                                $commentLines[] = [
                                     'comment' => $tokens[$i]['content'],
-                                    'token'   => $i,
-                                    'indent'  => $indent,
-                                );
+                                    'token' => $i,
+                                    'indent' => $indent,
+                                ];
                             }
                         }
                     }
                 } else {
                     $error = 'Missing parameter name';
                     $phpcsFile->addError($error, $tag, 'MissingParamName');
-                }//end if
+                }
             } else {
                 $error = 'Missing parameter type';
                 $phpcsFile->addError($error, $tag, 'MissingParamType');
-            }//end if
-            $params[] = array(
-                'tag'          => $tag,
-                'type'         => $type,
-                'var'          => $var,
-                'comment'      => $comment,
+            }
+            $params[] = [
+                'tag' => $tag,
+                'type' => $type,
+                'var' => $var,
+                'comment' => $comment,
                 'commentLines' => $commentLines,
-                'type_space'   => $typeSpace,
-                'var_space'    => $varSpace,
-            );
-        }//end foreach
-        $realParams  = $phpcsFile->getMethodParameters($stackPtr);
-        $foundParams = array();
+                'type_space' => $typeSpace,
+                'var_space' => $varSpace,
+            ];
+        }
+        $realParams = $phpcsFile->getMethodParameters($stackPtr);
+        $foundParams = [];
         foreach ($params as $pos => $param) {
             // If the type is empty, the whole line is empty.
             if ($param['type'] === '') {
@@ -251,13 +251,13 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                 $suggestedName = $this->suggestType($typeName);
                 if ($typeName !== $suggestedName) {
                     $error = 'Expected "%s" but found "%s" for parameter type';
-                    $data  = array(
+                    $data = [
                         $suggestedName,
                         $typeName,
-                    );
+                    ];
                     $fix = $phpcsFile->addFixableError($error, $param['tag'], 'IncorrectParamVarName', $data);
                     if ($fix === true) {
-                        $content  = $suggestedName;
+                        $content = $suggestedName;
                         $content .= str_repeat(' ', $param['type_space']);
                         $content .= $param['var'];
                         $content .= str_repeat(' ', $param['var_space']);
@@ -280,33 +280,33 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                         $typeHint = $realParams[$pos]['type_hint'];
                         if ($typeHint === '') {
                             $error = 'Type hint "%s" missing for %s';
-                            $data  = array(
+                            $data = [
                                 $suggestedTypeHint,
                                 $param['var'],
-                            );
+                            ];
                             $phpcsFile->addError($error, $stackPtr, 'TypeHintMissing', $data);
                         } else if ($typeHint !== substr($suggestedTypeHint, (strlen($typeHint) * -1))) {
                             $error = 'Expected type hint "%s"; found "%s" for %s';
-                            $data  = array(
+                            $data = [
                                 $suggestedTypeHint,
                                 $typeHint,
                                 $param['var'],
-                            );
+                            ];
                             $phpcsFile->addError($error, $stackPtr, 'IncorrectTypeHint', $data);
                         }
                     } else if ($suggestedTypeHint === '' && isset($realParams[$pos]) === true) {
                         $typeHint = $realParams[$pos]['type_hint'];
-                        if ($typeHint !== ''  && in_array($typeHint, self::$allowedTypes) === false) {
+                        if ($typeHint !== '' && in_array($typeHint, self::$allowedTypes) === false) {
                             $error = 'Unknown type hint "%s" found for %s';
-                            $data  = array(
+                            $data = [
                                 $typeHint,
                                 $param['var'],
-                            );
+                            ];
                             $phpcsFile->addError($error, $stackPtr, 'InvalidTypeHint', $data);
                         }
-                    }//end if
-                }//end if
-            }//end foreach
+                    }
+                }
+            }
             if ($param['var'] === '') {
                 continue;
             }
@@ -315,14 +315,14 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
             $spaces = ($maxType - strlen($param['type']) + 1);
             if ($param['type_space'] !== $spaces) {
                 $error = 'Expected %s spaces after parameter type; %s found';
-                $data  = array(
+                $data = [
                     $spaces,
                     $param['type_space'],
-                );
+                ];
                 $fix = $phpcsFile->addFixableError($error, $param['tag'], 'SpacingAfterParamType', $data);
                 if ($fix === true) {
                     $phpcsFile->fixer->beginChangeset();
-                    $content  = $param['type'];
+                    $content = $param['type'];
                     $content .= str_repeat(' ', $spaces);
                     $content .= $param['var'];
                     $content .= str_repeat(' ', $param['var_space']);
@@ -342,21 +342,21 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                         );
                     }
                     $phpcsFile->fixer->endChangeset();
-                }//end if
-            }//end if
+                }
+            }
             // Make sure the param name is correct.
             if (isset($realParams[$pos]) === true) {
                 $realName = $realParams[$pos]['name'];
                 if ($realName !== $param['var']) {
                     $code = 'ParamNameNoMatch';
-                    $data = array(
+                    $data = [
                         $param['var'],
                         $realName,
-                    );
+                    ];
                     $error = 'Doc comment for parameter %s does not match ';
                     if (strtolower($param['var']) === strtolower($realName)) {
                         $error .= 'case of ';
-                        $code   = 'ParamNameNoCaseMatch';
+                        $code = 'ParamNameNoCaseMatch';
                     }
                     $error .= 'actual variable name %s';
                     $phpcsFile->addError($error, $param['tag'], $code, $data);
@@ -365,7 +365,7 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                 // We must have an extra parameter comment.
                 $error = 'Superfluous parameter comment';
                 $phpcsFile->addError($error, $param['tag'], 'ExtraParamComment');
-            }//end if
+            }
             if ($param['comment'] === '') {
                 continue;
             }
@@ -373,14 +373,14 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
             $spaces = ($maxVar - strlen($param['var']) + 1);
             if ($param['var_space'] !== $spaces) {
                 $error = 'Expected %s spaces after parameter name; %s found';
-                $data  = array(
+                $data = [
                     $spaces,
                     $param['var_space'],
-                );
+                ];
                 $fix = $phpcsFile->addFixableError($error, $param['tag'], 'SpacingAfterParamName', $data);
                 if ($fix === true) {
                     $phpcsFile->fixer->beginChangeset();
-                    $content  = $param['type'];
+                    $content = $param['type'];
                     $content .= str_repeat(' ', $param['type_space']);
                     $content .= $param['var'];
                     $content .= str_repeat(' ', $spaces);
@@ -400,8 +400,8 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                         );
                     }
                     $phpcsFile->fixer->endChangeset();
-                }//end if
-            }//end if
+                }
+            }
             // Param comments must start with a capital letter and end with the full stop.
             $firstChar = $param['comment']{0};
             if (preg_match('|\p{Lu}|u', $firstChar) === 0) {
@@ -413,8 +413,8 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                 $error = 'Parameter comment must end with a full stop';
                 $phpcsFile->addError($error, $param['tag'], 'ParamCommentFullStop');
             }
-        }//end foreach
-    }//end processParams()
+        }
+    }
 
     /**
      * Returns a valid variable type for param/var tag.
@@ -446,12 +446,12 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                     return 'int';
                 case 'array()':
                     return 'array';
-            }//end switch
+            }
 
             if (strpos($lowerVarType, 'array(') !== false) {
                 // Valid array declaration:
                 // array, array(type), array(type1 => type2).
-                $matches = array();
+                $matches = [];
                 $pattern = '/^array\(\s*([^\s^=^>]*)(\s*=>\s*(.*))?\s*\)/i';
                 if (preg_match($pattern, $varType, $matches) !== 0) {
                     $type1 = '';
@@ -473,16 +473,15 @@ class Ulabox_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenti
                     return "array($type1$type2)";
                 } else {
                     return 'array';
-                }//end if
+                }
             } else if (in_array($lowerVarType, self::$allowedTypes) === true) {
                 // A valid type, but not lower cased.
                 return $lowerVarType;
             } else {
                 // Must be a custom type name.
                 return $varType;
-            }//end if
-        }//end if
+            }
+        }
 
-    }//end suggestType()
-
-}//end class
+    }
+}

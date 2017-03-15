@@ -1,6 +1,5 @@
 <?php
 
-
 class Ulabox_Sniffs_Objects_ObjectInstantiationSniff implements PHP_CodeSniffer_Sniff
 {
     /**
@@ -8,9 +7,10 @@ class Ulabox_Sniffs_Objects_ObjectInstantiationSniff implements PHP_CodeSniffer_
      *
      * @var array
      */
-    public $supportedTokenizers = array(
+    public $supportedTokenizers = [
         'PHP',
-    );
+    ];
+
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -18,10 +18,11 @@ class Ulabox_Sniffs_Objects_ObjectInstantiationSniff implements PHP_CodeSniffer_
      */
     public function register()
     {
-        return array(
+        return [
             T_NEW,
-        );
-    }//end register()
+        ];
+    }
+
     /**
      * Processes this test, when one of its tokens is encountered.
      *
@@ -34,12 +35,12 @@ class Ulabox_Sniffs_Objects_ObjectInstantiationSniff implements PHP_CodeSniffer_
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        $allowed = array(
+        $allowed = [
             T_STRING,
             T_NS_SEPARATOR,
-        );
+        ];
         $object = $stackPtr;
-        $line   = $tokens[$object]['line'];
+        $line = $tokens[$object]['line'];
         while ($object && $tokens[$object]['line'] === $line) {
             $object = $phpcsFile->findNext($allowed, $object + 1);
             if ($tokens[$object]['line'] === $line && !in_array($tokens[$object + 1]['code'], $allowed)) {
@@ -53,5 +54,5 @@ class Ulabox_Sniffs_Objects_ObjectInstantiationSniff implements PHP_CodeSniffer_
                 break;
             }
         }
-    }//end process()
-}//end class
+    }
+}

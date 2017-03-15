@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Parses and verifies the variable doc comment.
  */
 if (class_exists('PHP_CodeSniffer_Standards_AbstractVariableSniff', true) === false) {
     throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_Standards_AbstractVariableSniff not found');
 }
+
 /**
  * Parses and verifies the variable doc comment.
  */
@@ -16,7 +18,7 @@ class Ulabox_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Stan
      *
      * @var array(string)
      */
-    public static $allowedTypes = array(
+    public static $allowedTypes = [
         'array',
         'bool',
         'float',
@@ -26,7 +28,7 @@ class Ulabox_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Stan
         'string',
         'resource',
         'callable',
-    );
+    ];
 
     /**
      * Called to process class member vars.
@@ -39,27 +41,35 @@ class Ulabox_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Stan
      */
     public function processMemberVar(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens       = $phpcsFile->getTokens();
-        $commentToken = array(
+        $tokens = $phpcsFile->getTokens();
+        $commentToken = [
             T_COMMENT,
             T_DOC_COMMENT_CLOSE_TAG,
-        );
+        ];
         $commentEnd = $phpcsFile->findPrevious($commentToken, $stackPtr);
         if ($commentEnd === false) {
             $phpcsFile->addError('Missing member variable doc comment', $stackPtr, 'Missing');
+
             return;
         }
         if ($tokens[$commentEnd]['code'] === T_COMMENT) {
-            $phpcsFile->addError('You must use "/**" style comments for a member variable comment', $stackPtr, 'WrongStyle');
+            $phpcsFile->addError(
+                'You must use "/**" style comments for a member variable comment',
+                $stackPtr,
+                'WrongStyle'
+            );
+
             return;
         } else if ($tokens[$commentEnd]['code'] !== T_DOC_COMMENT_CLOSE_TAG) {
             $phpcsFile->addError('Missing member variable doc comment', $stackPtr, 'Missing');
+
             return;
         } else {
             // Make sure the comment we have found belongs to us.
-            $commentFor = $phpcsFile->findNext(array(T_VARIABLE, T_CLASS, T_INTERFACE), ($commentEnd + 1));
+            $commentFor = $phpcsFile->findNext([T_VARIABLE, T_CLASS, T_INTERFACE], ($commentEnd + 1));
             if ($commentFor !== $stackPtr) {
                 $phpcsFile->addError('Missing member variable doc comment', $stackPtr, 'Missing');
+
                 return;
             }
         }
@@ -82,14 +92,15 @@ class Ulabox_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Stan
                 }
             } else {
                 $error = '%s tag is not allowed in member variable comment';
-                $data  = array($tokens[$tag]['content']);
+                $data = [$tokens[$tag]['content']];
                 $phpcsFile->addWarning($error, $tag, 'TagNotAllowed', $data);
-            }//end if
-        }//end foreach
+            }
+        }
         // The @var tag is the only one we require.
         if ($foundVar === null) {
             $error = 'Missing @var tag in member variable comment';
             $phpcsFile->addError($error, $commentEnd, 'MissingVar');
+
             return;
         }
         $firstTag = $tokens[$commentStart]['comment_tags'][0];
@@ -102,48 +113,21 @@ class Ulabox_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Stan
         if ($string === false || $tokens[$string]['line'] !== $tokens[$foundVar]['line']) {
             $error = 'Content missing for @var tag in member variable comment';
             $phpcsFile->addError($error, $foundVar, 'EmptyVar');
+
             return;
         }
-        $varType       = $tokens[($foundVar + 2)]['content'];
+        $varType = $tokens[($foundVar + 2)]['content'];
         $suggestedType = $this->suggestType($varType);
 
         if ($varType !== $suggestedType) {
             $error = 'Expected "%s" but found "%s" for @var tag in member variable comment';
-            $data  = array(
+            $data = [
                 $suggestedType,
                 $varType,
-            );
+            ];
             $phpcsFile->addError($error, ($foundVar + 2), 'IncorrectVarType', $data);
         }
-    }//end processMemberVar()
-    /**
-     * Called to process a normal variable.
-     *
-     * Not required for this sniff.
-     *
-     * @param PHP_CodeSniffer_File $phpcsFile The PHP_CodeSniffer file where this token was found.
-     * @param int                  $stackPtr  The position where the double quoted
-     *                                        string was found.
-     *
-     * @return void
-     */
-    protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
-    {
-    }//end processVariable()
-    /**
-     * Called to process variables found in double quoted strings.
-     *
-     * Not required for this sniff.
-     *
-     * @param PHP_CodeSniffer_File $phpcsFile The PHP_CodeSniffer file where this token was found.
-     * @param int                  $stackPtr  The position where the double quoted
-     *                                        string was found.
-     *
-     * @return void
-     */
-    protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
-    {
-    }//end processVariableInString()
+    }
 
     /**
      * Returns a valid variable type for param/var tag.
@@ -175,12 +159,12 @@ class Ulabox_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Stan
                     return 'int';
                 case 'array()':
                     return 'array';
-            }//end switch
+            }
 
             if (strpos($lowerVarType, 'array(') !== false) {
                 // Valid array declaration:
                 // array, array(type), array(type1 => type2).
-                $matches = array();
+                $matches = [];
                 $pattern = '/^array\(\s*([^\s^=^>]*)(\s*=>\s*(.*))?\s*\)/i';
                 if (preg_match($pattern, $varType, $matches) !== 0) {
                     $type1 = '';
@@ -209,8 +193,38 @@ class Ulabox_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Stan
             } else {
                 // Must be a custom type name.
                 return $varType;
-            }//end if
-        }//end if
+            }
+        }
 
-    }//end suggestType()
-}//end class
+    }
+
+    /**
+     * Called to process a normal variable.
+     *
+     * Not required for this sniff.
+     *
+     * @param PHP_CodeSniffer_File $phpcsFile The PHP_CodeSniffer file where this token was found.
+     * @param int                  $stackPtr  The position where the double quoted
+     *                                        string was found.
+     *
+     * @return void
+     */
+    protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    {
+    }
+
+    /**
+     * Called to process variables found in double quoted strings.
+     *
+     * Not required for this sniff.
+     *
+     * @param PHP_CodeSniffer_File $phpcsFile The PHP_CodeSniffer file where this token was found.
+     * @param int                  $stackPtr  The position where the double quoted
+     *                                        string was found.
+     *
+     * @return void
+     */
+    protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    {
+    }
+}

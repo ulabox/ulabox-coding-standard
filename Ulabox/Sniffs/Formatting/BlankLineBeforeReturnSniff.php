@@ -1,6 +1,5 @@
 <?php
 
-
 class Ulabox_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP_CodeSniffer_Sniff
 {
     /**
@@ -8,10 +7,11 @@ class Ulabox_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP_CodeSni
      *
      * @var array
      */
-    public $supportedTokenizers = array(
+    public $supportedTokenizers = [
         'PHP',
         'JS',
-    );
+    ];
+
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -19,8 +19,9 @@ class Ulabox_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP_CodeSni
      */
     public function register()
     {
-        return array(T_RETURN);
+        return [T_RETURN];
     }
+
     /**
      * Processes this test, when one of its tokens is encountered.
      *
@@ -32,10 +33,10 @@ class Ulabox_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP_CodeSni
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens          = $phpcsFile->getTokens();
-        $current         = $stackPtr;
-        $previousLine    = $tokens[$stackPtr]['line'] - 1;
-        $prevLineTokens  = array();
+        $tokens = $phpcsFile->getTokens();
+        $current = $stackPtr;
+        $previousLine = $tokens[$stackPtr]['line'] - 1;
+        $prevLineTokens = [];
         while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
             if ($tokens[$current]['line'] == $previousLine
                 && $tokens[$current]['type'] !== 'T_WHITESPACE'
@@ -58,6 +59,7 @@ class Ulabox_Sniffs_Formatting_BlankLineBeforeReturnSniff implements PHP_CodeSni
                 $stackPtr
             );
         }
+
         return;
     }
 }
