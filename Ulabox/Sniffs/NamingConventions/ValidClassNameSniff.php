@@ -4,7 +4,6 @@
  * Validates that we don't things like Interface, Trait
  * Abstract, Entity, Repository, Service... on class names
  */
-
 class Ulabox_Sniffs_NamingConventions_ValidClassNameSniff implements PHP_CodeSniffer_Sniff
 {
     /**
@@ -12,9 +11,9 @@ class Ulabox_Sniffs_NamingConventions_ValidClassNameSniff implements PHP_CodeSni
      *
      * @var array
      */
-    public $supportedTokenizers = array(
+    public $supportedTokenizers = [
         'PHP',
-    );
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -23,12 +22,12 @@ class Ulabox_Sniffs_NamingConventions_ValidClassNameSniff implements PHP_CodeSni
      */
     public function register()
     {
-        return array(
+        return [
             T_INTERFACE,
             T_TRAIT,
             T_EXTENDS,
-            T_ABSTRACT
-        );
+            T_ABSTRACT,
+        ];
     }
 
     /**
@@ -42,8 +41,8 @@ class Ulabox_Sniffs_NamingConventions_ValidClassNameSniff implements PHP_CodeSni
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens   = $phpcsFile->getTokens();
-        $line     = $tokens[$stackPtr]['line'];
+        $tokens = $phpcsFile->getTokens();
+        $line = $tokens[$stackPtr]['line'];
 
         while ($tokens[$stackPtr]['line'] == $line) {
 
@@ -85,7 +84,9 @@ class Ulabox_Sniffs_NamingConventions_ValidClassNameSniff implements PHP_CodeSni
                 $function = $phpcsFile->findNext(T_FUNCTION, $stackPtr);
 
                 // making sure we're not dealing with an abstract function
-                if ($name && (is_null($function) || $name < $function) && substr($tokens[$name]['content'], 0, 8) == 'Abstract') {
+                if ($name && (is_null($function) || $name < $function) &&
+                    substr($tokens[$name]['content'], 0, 8) == 'Abstract'
+                ) {
                     $phpcsFile->addError(
                         'Abstract class name is prefixed with "Abstract"',
                         $stackPtr,

@@ -1,17 +1,16 @@
 <?php
 
-
-class Ulabox_Sniffs_Arrays_MultiLineArrayCommaSniff
-    implements PHP_CodeSniffer_Sniff
+class Ulabox_Sniffs_Arrays_MultiLineArrayCommaSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * A list of tokenizers this sniff supports.
      *
      * @var array
      */
-    public $supportedTokenizers = array(
+    public $supportedTokenizers = [
         'PHP',
-    );
+    ];
+
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -19,11 +18,12 @@ class Ulabox_Sniffs_Arrays_MultiLineArrayCommaSniff
      */
     public function register()
     {
-        return array(
+        return [
             T_ARRAY,
             T_OPEN_SHORT_ARRAY,
-        );
-    }//end register()
+        ];
+    }
+
     /**
      * Processes this test, when one of its tokens is encountered.
      *
@@ -36,7 +36,7 @@ class Ulabox_Sniffs_Arrays_MultiLineArrayCommaSniff
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        $open   = $tokens[$stackPtr];
+        $open = $tokens[$stackPtr];
         if ($open['code'] === T_ARRAY) {
             $closePtr = $open['parenthesis_closer'];
         } else {
@@ -44,7 +44,7 @@ class Ulabox_Sniffs_Arrays_MultiLineArrayCommaSniff
         }
         if ($open['line'] <> $tokens[$closePtr]['line']) {
             $lastComma = $phpcsFile->findPrevious(T_COMMA, $closePtr);
-            while ($lastComma < $closePtr -1) {
+            while ($lastComma < $closePtr - 1) {
                 $lastComma++;
                 if ($tokens[$lastComma]['code'] !== T_WHITESPACE) {
                     $phpcsFile->addError(
@@ -56,5 +56,5 @@ class Ulabox_Sniffs_Arrays_MultiLineArrayCommaSniff
                 }
             }
         }
-    }//end process()
-}//end class
+    }
+}

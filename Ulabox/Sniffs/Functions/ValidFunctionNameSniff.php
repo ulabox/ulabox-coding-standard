@@ -3,18 +3,16 @@
 /**
  * Validates that we don't use public setters and getters (e.g. setCode, getName) in our classes
  */
-
 class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
      * A list of tokenizers this sniff supports.
      *
      * @var array
      */
-    public $supportedTokenizers = array(
+    public $supportedTokenizers = [
         'PHP',
-    );
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -23,9 +21,9 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
      */
     public function register()
     {
-        return array(
-            T_FUNCTION
-        );
+        return [
+            T_FUNCTION,
+        ];
     }
 
     /**
