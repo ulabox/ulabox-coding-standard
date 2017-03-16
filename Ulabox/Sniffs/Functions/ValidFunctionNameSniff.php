@@ -106,7 +106,7 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
         if (!$parent) {
             return $reflection->hasMethod($methodName);
         } else {
-            return $this->isMethodDefinedInParent($methodName, $parent->getNamespaceName());
+            return $this->isMethodDefinedInParent($methodName, $parent);
         }
     }
 
@@ -125,8 +125,8 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
                     }
                 }
             }
-            if ($tokens[$i]['type'] === 'T_CLASS') {
-                for ($j=$i+1;$j<$numTokens;$j++) {
+            if ($tokens[$i]['type'] === 'T_CLASS' || $tokens[$i]['type'] === 'T_INTERFACE') {
+                for ($j = $i + 1; $j < $numTokens; $j++) {
                     if ($tokens[$j]['content'] === '{') {
                         $class = $tokens[$i+2]['content'];
                     }
