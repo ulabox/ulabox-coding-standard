@@ -6,7 +6,7 @@
     <rule ref="PSR1"/>
     <!-- Include the whole PSR-2 standard -->
     <rule ref="PSR2"/>
-
+    <!-- Explicit activation of other extra rules -->
     <rule ref="Generic.ControlStructures.InlineControlStructure"/>
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <rule ref="Generic.Functions.CallTimePassByReference"/>
@@ -19,7 +19,15 @@
     <rule ref="Squiz.ControlStructures.LowercaseDeclaration"/>
     <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
     <rule ref="Squiz.Scope.MemberVarScope"/>
-    <rule ref="Squiz.Strings.ConcatenationSpacing"/>
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="0" />
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+        <properties><property name="ignoreNewlines" value="true" /></properties>
+    </rule>
 
     <!-- We provide our own subclass of PEAR's ClassComment and FunctionComment sniff, but these will do: -->
     <rule ref="PEAR.Commenting.InlineComment"/>
@@ -28,30 +36,17 @@
     <rule ref="Zend">
         <!-- but exclude their code analyzer -->
         <exclude name="Zend.Debug.CodeAnalyzer"/>
-
         <!-- covered by Squiz ControlSignature, which enforces try/catch as well -->
         <exclude name="PEAR.ControlStructures.ControlSignature"/>
-
         <exclude name="Generic.Files.LineLength.TooLong"/>
-
+        <!-- Don't enforce Zend's private member underscores -->
+        <exclude name="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+        <!-- Ignore variables that contains numbers -->
+        <exclude name="Zend.NamingConventions.ValidVariableName.ContainsNumbers"/>
     </rule>
 
-    <!-- Don't enforce Zend's private member underscores -->
-    <rule ref="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore">
-        <severity>0</severity>
-    </rule>
-
-    <!-- Ignore variables that contains numbers -->
-    <rule ref="Zend.NamingConventions.ValidVariableName.ContainsNumbers">
-        <severity>0</severity>
-    </rule>
-
-    <!-- In practice, Symfony2 spaces multiline function calls differently than Zend -->
-    <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
-        <severity>0</severity>
-    </rule>
-    <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
-        <severity>0</severity>
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <properties><property name="allowMultipleArguments" value="false"/></properties>
     </rule>
 
     <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine">
@@ -63,5 +58,4 @@
             <property name="forbiddenFunctions" type="array" value="sizeof=>count,delete=>unset,eval=>null,system=>null,phpinfo=>null,die=>null,var_dump=>null,print_r=>null,extract=>null"/>
         </properties>
     </rule>
-
 </ruleset>
