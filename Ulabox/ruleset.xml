@@ -41,7 +41,7 @@
         <exclude name="Generic.Files.LineLength.TooLong"/>
         <!-- Don't enforce Zend's private member underscores -->
         <exclude name="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
-        <!-- Ignore variables that contains numbers -->
+        <!-- Ignore variables that conta ins numbers -->
         <exclude name="Zend.NamingConventions.ValidVariableName.ContainsNumbers"/>
     </rule>
 
