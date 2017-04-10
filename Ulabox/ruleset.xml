@@ -2,6 +2,11 @@
 <ruleset name="Ulabox">
     <description>Ulabox coding standard.</description>
 
+    <!-- Disable our custom type hint check (pending review) -->
+    <rule ref="Ulabox.Commenting.FunctionComment">
+        <exclude name="Ulabox.Commenting.FunctionComment.TypeHintMissing" />
+    </rule>
+
     <!-- Include the whole PSR-1 standard -->
     <rule ref="PSR1"/>
     <!-- Include the whole PSR-2 standard -->

@@ -81,11 +81,12 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
         $classFQN = $this->resolveClassFQN($tokens);
         $reflection = new ReflectionClass($classFQN);
 
-        return $this->isMethodDefinedInParent($methodName, $reflection) ||
-            $this->isMethodDefinedInInterface($methodName, $reflection);
+        return $this->isMethodDefinedInParent($methodName, $reflection)
+            || $this->isMethodDefinedInTrait($methodName, $reflection)
+            || $this->isMethodDefinedInInterface($methodName, $reflection);
     }
 
-    private function isMethodDefinedInInterface($methodName, $reflection)
+    private function isMethodDefinedInInterface($methodName, ReflectionClass $reflection)
     {
         $interfaces = $reflection->getInterfaces();
         if (empty($interfaces)) {
@@ -100,7 +101,22 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
         return false;
     }
 
-    private function isMethodDefinedInParent($methodName, $reflection)
+    private function isMethodDefinedInTrait($methodName, ReflectionClass $reflection)
+    {
+        $traits = $reflection->getTraits();
+        if (empty($traits)) {
+            return false;
+        }
+        foreach ($traits as $trait) {
+            if ($trait->hasMethod($methodName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isMethodDefinedInParent($methodName, ReflectionClass $reflection)
     {
         $parent = $reflection->getParentClass();
         if (!$parent) {
@@ -125,10 +141,23 @@ class Ulabox_Sniffs_Functions_ValidFunctionNameSniff implements PHP_CodeSniffer_
                     }
                 }
             }
-            if ($tokens[$i]['type'] === 'T_CLASS' || $tokens[$i]['type'] === 'T_INTERFACE') {
+
+            if ($tokens[$i]['type'] === 'T_ABSTRACT') {
+                for ($j = $i + 1; $j < $numTokens; $j++) {
+                    if ($tokens[$j]['content'] === '{') {
+                        $class = $tokens[$i+4]['content'];
+                        break 2;
+                    }
+                }
+            }
+
+            if ($tokens[$i]['type'] === 'T_CLASS'
+                || $tokens[$i]['type'] === 'T_TRAIT'
+                || $tokens[$i]['type'] === 'T_INTERFACE') {
                 for ($j = $i + 1; $j < $numTokens; $j++) {
                     if ($tokens[$j]['content'] === '{') {
                         $class = $tokens[$i+2]['content'];
+                        break 2;
                     }
                 }
             }
